@@ -1,0 +1,136 @@
+Go 언어 개요
+
+역사
+
+Go 언어는 2007년 구글에서 시작된 프로젝트로, Robert Griesemer, Rob Pike, Ken Thompson에 의해 설계되었습니다. 복잡한 시스템을 더 쉽게 관리하기 위해 개발되었으며, 2009년에 공개되었습니다. Go는 빠른 학습, 코드의 간결성, 빠른 컴파일 속도, 그리고 효율적인 동시성 처리 능력으로 많은 개발자에게 선택받고 있습니다.
+
+ 
+
+특징
+
+간결한 문법: Go는 학습하기 쉽고, 코드를 읽고 작성하기 편리하도록 설계되었습니다.
+
+동시성 지원: 고루틴(Goroutine)과 채널(Channel)을 사용하여 복잡한 동시성 작업을 간단하게 처리할 수 있습니다.
+
+정적 타이핑: 컴파일 시간에 타입 체크를 수행하여 코드의 안정성을 높입니다.
+
+자동 메모리 관리: 가비지 컬렉션을 통해 메모리 관리를 자동화하여 개발자의 부담을 줄여줍니다.
+
+크로스 컴파일 지원: 다양한 운영 체제와 아키텍처에 대한 쉬운 빌드 및 배포를 지원합니다.
+
+주요 링크
+
+공식 웹사이트: golang.org
+
+공식 문서: http://golang.org/doc/ 
+
+Go 플레이그라운드: http://play.golang.org , 코드를 온라인에서 실험해 볼 수 있다.
+
+Go 패키지 문서: pkg.go.dev, 다양한 Go 패키지의 문서를 찾아볼 수 있다.
+
+사용처 및 프로그램
+
+Go 언어는 다양한 소프트웨어 개발 분야에서 사용됩니다.
+
+웹 서버 및 마이크로서비스: Go는 빠른 실행 속도와 동시성 처리 능력으로 백엔드 서버 개발에 매우 적합합니다.
+
+package main
+
+import (
+    "fmt"
+    "net/http"
+)
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "Hello, Go Web Server!")
+}
+
+func main() {
+    http.HandleFunc("/", helloHandler)
+    http.ListenAndServe(":8080", nil)
+}
+
+
+ 
+
+클라우드 및 분산 시스템: 쿠버네티스와 도커 같은 현대적인 클라우드 인프라 도구는 Go로 개발되었습니다.
+
+https://github.com/moby/moby 
+
+ 
+
+데이터베이스와 스토리지 시스템: Go는 데이터 저장 및 처리 시스템 개발에도 사용됩니다.
+
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    _ "github.com/go-sql-driver/mysql"
+)
+
+func main() {
+    db, err := sql.Open("mysql", "user:password@/dbname")
+    if err != nil {
+        panic(err)
+    }
+    defer db.Close()
+
+    var version string
+    db.QueryRow("SELECT VERSION()").Scan(&version)
+    fmt.Println("Connected to:", version)
+}
+
+
+ 
+
+네트워킹 및 통신: Go는 고성능 네트워크 서버 구축에 필요한 훌륭한 도구와 라이브러리를 제공합니다.
+
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "net"
+)
+
+func handleConnection(conn net.Conn) {
+    fmt.Fprintf(conn, "Hello from Go TCP Server\n")
+    bufio.NewReader(conn).ReadString('\n')
+    conn.Close()
+}
+
+func main() {
+    ln, err := net.Listen("tcp", ":8080")
+    if err != nil {
+        panic(err)
+    }
+    defer ln.Close()
+
+    for {
+        conn, err := ln.Accept()
+        if err != nil {
+            continue
+        }
+        go handleConnection(conn)
+    }
+}
+
+
+ 
+
+명령줄 도구: 간결한 문법과 빠른 실행 속도는 다양한 CLI 도구 개발에 적합합니다.
+
+package main
+
+import (
+    "flag"
+    "fmt"
+)
+
+func main() {
+    namePtr := flag.String("name", "World", "a name to say hello to")
+    flag.Parse()
+
+    fmt.Printf("Hello, %s!\n", *namePtr)
+}
